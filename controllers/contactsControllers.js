@@ -1,66 +1,54 @@
 import * as contactsServices from "../services/contactsServices.js";
-
 import HttpError from "../helpers/HttpError.js";
+import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
-export const getAllContacts = async (req, res, next) => {
-  try {
-    const result = await contactsServices.listContacts();
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
+const getAllContacts = async (_, res) => {
+  const result = await contactsServices.listContacts();
+  res.json(result);
 };
 
-export const getOneContact = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await contactsServices.getContactById(id);
+const getOneContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsServices.getContactById(id);
 
-    if (!result) {
-      throw HttpError(404);
-    }
-
-    res.json(result);
-  } catch (error) {
-    next(error);
+  if (!result) {
+    throw HttpError(404);
   }
+
+  res.json(result);
 };
 
-export const deleteContact = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await contactsServices.removeContact(id);
+const deleteContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsServices.removeContact(id);
 
-    if (!result) {
-      throw HttpError(404);
-    }
-
-    res.json(result);
-  } catch (error) {
-    next(error);
+  if (!result) {
+    throw HttpError(404);
   }
+
+  res.json(result);
 };
 
-export const createContact = async (req, res, next) => {
-  try {
-    const result = await contactsServices.addContact(req.body);
+const createContact = async (req, res) => {
+  const result = await contactsServices.addContact(req.body);
 
-    res.json(result).status(201);
-  } catch (error) {
-    next(error);
-  }
+  res.status(201).json(result);
 };
 
-export const updateContact = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await contactsServices.updateContact(id, req.body);
-    if (!result) {
-      throw HttpError(404);
-    }
-
-    res.json(result);
-  } catch (error) {
-    next(error);
+const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await contactsServices.updateContact(id, req.body);
+  if (!result) {
+    throw HttpError(404);
   }
+
+  res.json(result);
+};
+
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  createContact: ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
 };
