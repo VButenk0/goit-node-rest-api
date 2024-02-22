@@ -1,13 +1,12 @@
 import Joi from "joi";
 import { emailRegexp } from "../constants/regexp.js";
 
-export const signupScheme = Joi.object({
-    username: Joi.string().required(),
+export const signupSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).required(),
     password: Joi.string().min(6).required(),
 })
 
-export const signinScheme = Joi.object({
+export const signinSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).required(),
     password: Joi.string().min(6).required(),
 })

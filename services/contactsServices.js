@@ -1,25 +1,33 @@
 import Contact from "../models/Contact.js";
 
-export async function listContacts() {
-  return Contact.find();
-}
+export const listContacts = () => Contact.find();
 
-export async function getContactById(contactId) {
-  return Contact.findById(contactId);
-}
+export const getContactsByFilter = (filter, query = {}) =>
+  Contact.find(filter, null, query);
 
-export async function removeContact(contactId) {
-  return Contact.findByIdAndDelete(contactId);
-}
+export const getContactsCountByFilter = (filter) =>
+  Contact.countDocuments(filter);
 
-export async function addContact(data) {
-  return Contact.create(data);
-}
+export const getContactById = (contactId) => Contact.findById(contactId);
 
-export async function updateContact(contactId, data) {
-  return Contact.findByIdAndUpdate(contactId, data);
-}
+export const getContactByFilter = (filter) => Contact.findOne(filter);
 
-export async function updateStatusContact(contactId, data) {
-  return Contact.findByIdAndUpdate(contactId, data);
-}
+export const removeContact = (contactId) =>
+  Contact.findByIdAndDelete(contactId);
+
+export const removeContactByFilter = (filter) =>
+  Contact.findOneAndDelete(filter);
+
+export const addContact = (data) => Contact.create(data);
+
+export const updateContact = (contactId, data) =>
+  Contact.findByIdAndUpdate(contactId, data);
+
+export const updateContactByFilter = (filter, data) =>
+  Contact.findOneAndUpdate(filter, data);
+
+export const updateStatusContact = (contactId, data) =>
+  Contact.findByIdAndUpdate(contactId, data);
+
+export const updateStatusContactByFilter = (filter, data) =>
+  Contact.findOneAndUpdate(filter, data);

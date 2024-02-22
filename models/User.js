@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { haveSaveError, setUpdateSetting } from "./hooks.js";
+import { handleSaveError, setUpdateSetting } from "./hooks.js";
 import { emailRegexp } from "../constants/regexp.js";
 
 const userSchema = new Schema(
@@ -27,11 +27,11 @@ const userSchema = new Schema(
   { versionKey: false }
 );
 
-userSchema.post("save", haveSaveError);
+userSchema.post("save", handleSaveError);
 
 userSchema.pre("findOneAndUpdate", setUpdateSetting);
 
-userSchema.post("findOneAndUpdate", haveSaveError);
+userSchema.post("findOneAndUpdate", handleSaveError);
 
 const User = model("user", userSchema);
 

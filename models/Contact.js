@@ -1,12 +1,8 @@
 import { Schema, model } from "mongoose";
-import { haveSaveError, setUpdateSetting } from "./hooks.js";
+import { handleSaveError, setUpdateSetting } from "./hooks.js";
 
 const contactSchema = new Schema(
   {
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'user',
-    },
     name: {
       type: String,
       required: [true, "Set name for contact"],
@@ -21,15 +17,19 @@ const contactSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
   },
   { versionKey: false }
 );
 
-contactSchema.post("save", haveSaveError);
+contactSchema.post("save", handleSaveError);
 
 contactSchema.pre("findOneAndUpdate", setUpdateSetting);
 
-contactSchema.post("findOneAndUpdate", haveSaveError);
+contactSchema.post("findOneAndUpdate", handleSaveError);
 
 const Contact = model("contact", contactSchema);
 
