@@ -14,7 +14,7 @@ authRouter.post("/register", validateBody(signupSchema), authController.signup);
 
 authRouter.post("/login", validateBody(signinSchema), authController.signin);
 
-authRouter.post("/current", authenticate, authController.current);
+authRouter.get("/current", authenticate, authController.current);
 
 authRouter.post("/logout", authenticate, authController.logout);
 
