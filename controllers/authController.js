@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import gravatar from "gravatar";
+import path from "path";
+import Jimp from "jimp";
 
 import * as authServices from "../services/authServices.js";
 import * as userServices from "../services/userServices.js";
@@ -51,6 +54,7 @@ const signin = async (req, res) => {
     user: {
       email: user.email,
       subscription: user.subscription,
+      avatarURL: gravatar.url(email),
     },
   });
 };
@@ -68,9 +72,42 @@ const logout = async (req, res) => {
   res.json({ status: 204 });
 };
 
+const changeAvatar = async (req, res, next) => {
+  try {
+    const { file } = req.file;
+
+    const image = await Jimp.read(file.path);
+    await image.resize(250, 250).writeAsync(file.path);
+
+    const uniqueFileName = `${Date.now()}-${Math.round(
+      Math.random() * 1e9
+    )}${path.extname(file.originalname)}`;
+
+    const avatarPath = path.join(
+      __dirname,
+      `../public/avatars/${uniqueFileName}`
+    );
+    await image.writeAsync(avatarPath);
+
+    const avatarURL = `/avatars/${uniqueFileName}`;
+
+    const userId = req.user.id;
+    await userServices.updateUser(userId, { avatarURL });
+
+    res.status(200).json({ avatarURL });
+  } catch (error) {
+    next(error);
+  }
+
+  const avatarURL = gravatar;
+
+  res.json({ file });
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   current: ctrlWrapper(current),
   logout: ctrlWrapper(logout),
+  changeAvatar: ctrlWrapper(changeAvatar),
 };
