@@ -19,12 +19,20 @@ const userSchema = new Schema(
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
+    avatarUrl: {
+      type: String,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
     token: {
       type: String,
       default: null,
-    },
-    avatarUrl: {
-      type: String,
     },
   },
   { versionKey: false }
