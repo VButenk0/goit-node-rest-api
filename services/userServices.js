@@ -20,3 +20,6 @@ export const updateUser = async (userId, updateData) => {
     throw HttpError(500, "Failed to update user");
   }
 };
+
+export const updateUserStatus = (filter, data) =>
+  User.findOneAndUpdate(filter, data);
